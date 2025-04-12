@@ -45,6 +45,10 @@
   
   <style scoped>
 
+
+.buttons-container a,.button{
+  font-weight: bold;
+}
 .navbar-container {
   text-align: center;
 }
