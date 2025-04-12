@@ -1,15 +1,15 @@
 <template>
-  <UserInfo v-if="islogged" :user="user"/>
+  <NavBarUser v-if="islogged" :user="user"/>
   <router-view/>
 </template>
 
 <script>
 import { isLogged, getUser, waitForAuthInit } from '@/Firebase/Authentification/getUser'; 
-import UserInfo from './components/NavBarUser.vue';
+import NavBarUser from './components/NavBarUser.vue';
 
 export default {
   name: 'App',
-  components: { UserInfo },
+  components: { NavBarUser },
   data() {
     return {
       user: null,
