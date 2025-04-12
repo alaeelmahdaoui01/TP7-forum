@@ -9,28 +9,44 @@
   </form>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import { defineEmits } from 'vue';  // to declare custom events (here login in useSignup())
-import useSignup from '@/Firebase/Authentification/useSignup.js';
+<script>
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import db from "../Firebase/Config"
 
-const email=ref(''); 
-const password = ref('');
-const displayName = ref('');
+export default {
+  name: "SignupForm",
+  components: {},
+  data(){
+    return {
+      displayName: "",
+      email : "", 
+      password: "",
+      error:""
+    }
+  },
+  methods :{
+    async handleSignUP() {
+  try {
+    const firebaseAuth = firebase.auth();
+    const createUser = await firebaseAuth.createUserWithEmailAndPassword(this.email, this.password);
+    const result = createUser;
+    
+    const dataBase = db.collection("users").doc(result.user.uid);
+    this.error = "";
 
-const { error,signup } = useSignup();
-const emit = defineEmits(['customEvent']);
+    await dataBase.set({
+      displayName: this.firstName,
+      email: this.email,
+    });
 
-
-const handleSignUP = async () => {
-  await signup(email.value,password.value,displayName.value)
-  if (!error.value) {
-    //console.log("USER LOGGED SUCCESS");
-    emit('signup');
-  } 
+    this.$router.push("/home");
+  } catch (err) {
+    this.error = err.message; // This will show the error in your <div class="error">{{ error }}</div>
+  }
 }
-
-
+  }
+};
 </script>
 
 <style scoped>

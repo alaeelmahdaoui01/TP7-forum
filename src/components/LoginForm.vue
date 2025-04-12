@@ -1,36 +1,44 @@
 <template>
-    <form @submit.prevent="handleLogin" class="login">
-      <input type="email" required placeholder="Your email" v-model="email">
-      <input type="password" required placeholder="Your password" v-model="password">
-      <input type="submit" value="Login">
-      <div class="error">{{ error }}</div>
-    </form>
-  </template>
-  
-<script setup>
+  <form @submit.prevent="handleLogin" class="login">
+    <input type="email" required placeholder="Your email" v-model="email">
+    <input type="password" required placeholder="Your password" v-model="password">
+    <input type="submit" value="Login">
+    <div class="error">{{ error }}</div>
+  </form>
+</template>
 
-import { ref } from 'vue';
-import { defineEmits } from 'vue';  // to declare custom events (here login in useLogin())
-import useLogin from '@/Firebase/Authentification/useLogin.js';
+<script>
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
-const email=ref(''); 
-const password = ref('');
-
-const { error } = useLogin();
-const emit = defineEmits(['customEvent']);
-
-
-const handleLogin = async () => {
-  if (!error.value) {
-    console.log("USER LOGGED SUCCESS");
-    emit('login');
-  } else {
-    console.log("USER NOT LOGGED");
+export default {
+  name: "LoginForm",
+  components: {},
+  data(){
+    return {
+      email : "", 
+      password: "",
+      error:""
+    }
+  },
+  methods :{
+    handleLogin() {
+      firebase.auth().signInWithEmailAndPassword(this.email,this.password).then(()=>{
+          this.$router.push("/home");
+          this.error="";
+          console.log(firebase.auth().currentUser.uid);
+        }).catch(err => {
+          if (err.code === 'auth/user-not-found') {
+            this.error = "No account found with this email.";
+          } else if (err.code === 'auth/wrong-password') {
+            this.error = "Incorrect password.";
+          } else {
+            this.error = err.message;
+          }
+        })
+    }
   }
-}
-
-
-
+};
 </script>
   
 <style scoped>

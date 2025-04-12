@@ -1,34 +1,41 @@
+
+
 <template>
-    <form @submit.prevent="handleForgotPassword">
-      <input type="email" v-model="email" placeholder="Enter your email" required />
-      <button type="submit">Reset Password</button>
-      <div class="error" v-if="error">{{ error }}</div>
-    </form>
-  </template>
-  
-  <script setup>
-  import { ref } from "vue";
-  import useForgotPassword from "@/Firebase/Authentification/forgotPassword.js";
-  import { defineEmits } from 'vue';
+  <form @submit.prevent="resetPassword" class="reset">
+    <input type="email" required placeholder="Your email" v-model="email">
+    <input type="submit" value="Reset">
+    <div class="message">{{ message }}</div>
+  </form>
+</template>
 
-  const email = ref("");
-  const { error, forgotPassword } = useForgotPassword();
-  const emit = defineEmits(['customEvent']);
-  
-  const handleForgotPassword = async () => {
-    try {
-      await forgotPassword(email.value);
-      alert("Password reset email sent. Please check your inbox.");
-      emit('reset');
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  </script>
+<script>
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
+export default {
+name: "ResetPassword",
+components: {},
+data(){
+  return {
+    email : "", 
+    message:"",
+  }
+},
+methods :{
+  resetPassword(){
+    firebase.auth().sendPasswordResetEmail(this.email).then(()=>{
+      this.message="If your account exists, you will receive an email"
+    }).catch(err => {
+        this.message=err.message
+      })
+  }
+}
+};
+
+</script>
 
 <style scoped>
-form {
+.reset {
   max-width: 400px;
   margin: 100px auto;
   padding: 2rem;
@@ -41,7 +48,7 @@ form {
   font-family: 'Segoe UI', sans-serif;
 }
 
-form input[type="email"] {
+.reset input[type="email"] {
   padding: 0.75rem;
   font-size: 1rem;
   border: 1px solid #ddd;
@@ -49,12 +56,12 @@ form input[type="email"] {
   transition: border-color 0.3s ease;
 }
 
-form input[type="email"]:focus {
+.reset input[type="email"]:focus {
   border-color: #5c9ded;
   outline: none;
 }
 
-form button[type="submit"] {
+.reset input[type="submit"] {
   padding: 0.75rem;
   font-size: 1rem;
   background-color: #5c9ded;
@@ -65,8 +72,14 @@ form button[type="submit"] {
   transition: background-color 0.3s ease;
 }
 
-form button[type="submit"]:hover {
+.reset input[type="submit"]:hover {
   background-color: #407ec9;
+}
+
+.message {
+  color: #5c9ded;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 .error {

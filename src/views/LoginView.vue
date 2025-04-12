@@ -7,15 +7,19 @@
       <h2 v-else>Sign up</h2>
       
       <div v-if="resetp">
-        <ForgotPassword @reset="returntologin" />
+        <div>
+            Back to 
+            <span @click="showLogin = true ; resetp=false">Login</span>
+        </div>
+        <ForgotPassword />
       </div>
       <div v-else-if="showLogin">
-        <LoginForm @login="enterForum" />
+        <LoginForm />
         <p>No account yet? <span @click="showLogin = false">Signup</span> instead.</p>
         <p>Forgot Password? <span @click="resetp = true">Reset Password</span></p>
       </div>
       <div v-else>
-        <SignupForm @signup="returntologin" />
+        <SignupForm />
         <p>Already registered? <span @click="showLogin = true">Login</span> instead.</p>
       </div>
     </div>
@@ -43,13 +47,7 @@ export default {
     };
   },
   methods: {
-    enterForum() {
-      this.$router.push('/home');
-    },
-    returntologin() {
-      this.resetp = false; // Reset the reset password flag
-      this.showLogin = true; // Show the login form
-    },
+    
   },
 };
 </script>

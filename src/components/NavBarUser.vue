@@ -37,7 +37,7 @@
     methods: {
       leave() {
         signOut();
-        this.$router.push('/auth');
+        this.$router.push('/');
       }
     }
   }
