@@ -1,26 +1,34 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <UserInfo v-if="islogged" :user="user"/>
+  <router-view/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { isLogged, getUser, waitForAuthInit } from '@/Firebase/Authentification/getUser'; 
+import UserInfo from './components/NavBarUser.vue';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  components: { UserInfo },
+  data() {
+    return {
+      user: null,
+      islogged: false,
+    };
+  },
+  mounted() {
+    waitForAuthInit().then(() => {
+      this.islogged = isLogged();
+      if (this.islogged) {
+        this.user = getUser();
+      }
+    });
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  body{
+    font-family: Arial, sans-serif;
+  }
 </style>
