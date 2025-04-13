@@ -2,11 +2,12 @@
   <div v-if="reply && authorName" class="thread-reply">
     <p>{{ reply.message }}</p>
     <p class="reply-info">
-      Reply by <router-link :to="'/profile/' + reply.author">{{ authorName }}</router-link>
+      Reply by
+      <router-link :to="'/profile/' + reply.author">{{ authorName }}</router-link>
     </p>
     <button
       v-if="reply.author === currentUserId"
-      @click="deleteReply(reply.id)"
+      @click="deleteReply"
       class="delete-button"
     >
       Delete Reply
@@ -15,8 +16,7 @@
 </template>
 
 <script>
-import { getUserById, getUser } from '@/Firebase/Authentification/getUser';
-import { deleteResponse } from '@/Firebase/firestore/delete';
+import { getUserById } from '@/Firebase/Authentification/getUser';
 
 export default {
   name: 'ThreadReply',
@@ -24,12 +24,19 @@ export default {
     reply: {
       type: Object,
       required: true
+    },
+    index: {
+      type: Number,
+      required: true
+    },
+    currentUserId: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
-      authorName: '',
-      currentUserId: getUser()?.uid
+      authorName: ''
     };
   },
   async created() {
@@ -47,19 +54,14 @@ export default {
       const user = await getUserById(id);
       return user.displayName;
     },
-    async deleteReply(replyId) {
-      try {
-        const threadId = this.$route.params.id;
-        await deleteResponse(threadId, replyId);
-        window.location.reload(); // Refresh to reflect deleted reply
-      } catch (error) {
-        alert('Failed to delete reply');
-        console.error(error);
-      }
+    deleteReply() {
+      // Emit the index to the parent component
+      this.$emit('delete-reply', this.index);
     }
   }
 };
 </script>
+
 
 <style scoped>
 .thread-reply {
@@ -83,3 +85,5 @@ export default {
   margin-top: 10px;
 }
 </style>
+
+
