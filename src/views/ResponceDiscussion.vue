@@ -1,17 +1,31 @@
 <template>
   <div v-if="reply && authorName" class="thread-reply">
-    <p>{{ reply.message }}</p>
-    <p class="reply-info">
-      Reply by
-      <router-link :to="'/profile/' + reply.author">{{ authorName }}</router-link>
-    </p>
-    <button
-      v-if="reply.author === currentUserId"
-      @click="deleteReply"
-      class="delete-button"
-    >
-      Delete Reply
-    </button>
+    <div v-if="isEditing">
+      <textarea v-model="editedMessage" class="reply-input" />
+      <button @click="submitEdit" class="reply-button">Save</button>
+      <button @click="cancelEdit" class="reply-button">Cancel</button>
+    </div>
+    <div v-else>
+      <p>{{ reply.message }}</p>
+      <p class="reply-info">
+        Reply by
+        <router-link :to="'/profile/' + reply.author">{{ authorName }}</router-link>
+      </p>
+      <button
+        v-if="reply.author === currentUserId"
+        @click="isEditing = true"
+        class="edit-button"
+      >
+        Edit
+      </button>
+      <button
+        v-if="reply.author === currentUserId"
+        @click="deleteReply"
+        class="delete-button"
+      >
+        Delete
+      </button>
+    </div>
   </div>
 </template>
 
@@ -36,7 +50,9 @@ export default {
   },
   data() {
     return {
-      authorName: ''
+      authorName: '',
+      isEditing: false,
+      editedMessage: ''
     };
   },
   async created() {
@@ -55,8 +71,27 @@ export default {
       return user.displayName;
     },
     deleteReply() {
-      // Emit the index to the parent component
       this.$emit('delete-reply', this.index);
+    },
+    submitEdit() {
+      const trimmed = this.editedMessage.trim();
+      if (trimmed && trimmed !== this.reply.message) {
+        this.$emit('edit-reply', {
+          index: this.index,
+          newContent: trimmed
+        });
+      }
+      this.isEditing = false;
+    },
+    cancelEdit() {
+      this.isEditing = false;
+    }
+  },
+  watch: {
+    isEditing(newVal) {
+      if (newVal) {
+        this.editedMessage = this.reply.message;
+      }
     }
   }
 };
@@ -83,5 +118,14 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+}
+.edit-button {
+  background-color: #f0ad4e;
+  color: white;
+  margin-right: 10px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

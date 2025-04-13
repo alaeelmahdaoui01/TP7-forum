@@ -11,6 +11,7 @@
         :index="index"
         :currentUserId="currentUserId"
         @delete-reply="deleteReply"
+        @edit-reply="editReply"
       />
     </div>
 
@@ -33,6 +34,8 @@ import { getUser } from '@/Firebase/Authentification/getUser';
 import { getthread } from '@/Firebase/firestore/getDisc.js';
 import { appendAnswerToThread } from '@/Firebase/firestore/addDisc.js';
 import { deleteResponse } from '@/Firebase/firestore/delete.js';
+import { editResponse } from '@/Firebase/firestore/edit.js';
+
 
 export default {
   name: 'DiscussionView',
@@ -81,7 +84,16 @@ export default {
       } catch (err) {
         alert('Failed to delete reply.');
       }
-    }
+    },
+    async editReply({ index, newContent }) {
+  try {
+    await editResponse(this.$route.params.id, index, newContent);
+    await this.loadThread(); // Refresh replies
+  } catch (err) {
+    alert('Failed to edit reply.');
+  }
+}
+
   }
 };
 </script>
