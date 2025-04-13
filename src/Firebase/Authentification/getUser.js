@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { projectFirestore, projectAuth } from "@/Firebase/Config";
+import { updateProfile, updateEmail } from "firebase/auth";
 
 const user = ref(projectAuth.currentUser);
 let authInitialized = false;
@@ -31,12 +32,37 @@ const waitForAuthInit = () => {
     return authReady;
 }
 
-
 const getUserById = async(uid) => {
-    let res = await projectFirestore.collection('users').doc(uid).get();
+    const res = await projectFirestore.collection('users').doc(uid).get();
     return res.data();
 };
 
+// ✅ Add this
+const updateUserProfile = async (userId, { displayName, email }) => {
+    const currentUser = projectAuth.currentUser;
+    if (!currentUser || currentUser.uid !== userId) {
+        throw new Error("Unauthorized or invalid user.");
+    }
 
+    if (displayName && currentUser.displayName !== displayName) {
+        await updateProfile(currentUser, { displayName });
+    }
 
-export { getUser, isLogged, waitForAuthInit, getUserById };
+    if (email && currentUser.email !== email) {
+        await updateEmail(currentUser, email);
+    }
+
+    // Optionally update Firestore too:
+    await projectFirestore.collection('users').doc(userId).update({
+        displayName,
+        email
+    });
+};
+
+export {
+    getUser,
+    isLogged,
+    waitForAuthInit,
+    getUserById,
+    updateUserProfile // ✅ make sure it's exported!
+};

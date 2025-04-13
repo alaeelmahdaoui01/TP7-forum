@@ -1,32 +1,33 @@
 <template>
-  <div class="paddd">
+  <div class="padding-container">
     <div v-if="user" class="profile-container">
       <div class="profile-header">
         <h1>Profile</h1>
         <p>Name: <span class="profile-detail">{{ user.displayName }}</span></p>
         <p>Email: <span class="profile-detail">{{ user.email }}</span></p>
-        <p>Creation Time: <span class="profile-detail">{{ user.createdAt }}</span></p>
+        <p>Creation Time: <span class="profile-detail">{{ formattedDate(user.createdAt) }}</span></p>
       </div>
-      
-      <!-- Update Profile Section -->
-      
-      
+
       <div class="threads-section">
-        <h1>Shared Discussions:</h1>
+        <h2>Shared Discussions:</h2>
         <ListThread v-if="threads.length > 0" :threads="threads" />
-        <div v-else>no discussions yet!!</div>
+        <div v-else>No discussions yet!</div>
       </div>
+
       <div class="update-profile">
         <button @click="toggleUpdateForm" class="update-button">Update Profile</button>
+
         <div v-if="showUpdateForm" class="update-form">
           <div class="form-group">
             <label for="name" class="form-label">Name:</label>
-            <input type="text" id="name" v-model="updatedName" class="form-input">
+            <input type="text" id="name" v-model.trim="updatedName" class="form-input">
           </div>
+
           <div class="form-group">
             <label for="email" class="form-label">Email:</label>
-            <input type="email" id="email" v-model="updatedEmail" class="form-input">
+            <input type="email" id="email" v-model.trim="updatedEmail" class="form-input">
           </div>
+
           <button @click="updateProfile" class="update-button">Update</button>
         </div>
       </div>
@@ -36,7 +37,7 @@
 
 <script>
 import ListThread from '@/components/DiscussionList.vue';
-import { getUserById, updateUserProfile } from '@/Firebase/Authentification/getUser'; // Import updateUserProfile function
+import { getUserById, updateUserProfile } from '@/Firebase/Authentification/getUser';
 import { getThreadsByIds } from '@/Firebase/firestore/getDisc.js';
 
 export default {
@@ -48,23 +49,33 @@ export default {
       threads: [],
       updatedName: '',
       updatedEmail: '',
-      showUpdateForm: false // Add a data property to control form visibility
+      showUpdateForm: false
     };
   },
   methods: {
     async updateProfile() {
-      try {
-        const userId = this.$route.params.id;
-        await updateUserProfile(userId, { displayName: this.updatedName, email: this.updatedEmail });
-        // Optionally, update other profile information as needed
-        alert('Profile updated successfully!');
-      } catch (error) {
-        console.error('Error updating profile:', error);
-        alert('Failed to update profile. Please try again.');
+  try {
+    const userId = this.$route.params.id;
+    await updateUserProfile(userId, {
+      displayName: this.updatedName,
+      email: this.updatedEmail
+    });
+    alert('Profile updated successfully!');
+  } catch (error) {
+    console.error('Error updating profile:', error.code || error.message || error);
+    alert('Failed to update profile. Please try again.');
+  }
+},
+
+    toggleUpdateForm() {
+      this.showUpdateForm = !this.showUpdateForm;
+      if (this.showUpdateForm && this.user) {
+        this.updatedName = this.user.displayName || '';
+        this.updatedEmail = this.user.email || '';
       }
     },
-    toggleUpdateForm() {
-      this.showUpdateForm = !this.showUpdateForm; // Toggle form visibility
+    formattedDate(date) {
+      return date instanceof Date ? date.toLocaleString() : date;
     }
   },
   async created() {
@@ -72,9 +83,11 @@ export default {
       const userId = this.$route.params.id;
       this.user = await getUserById(userId);
       if (this.user) {
-        this.user.createdAt = this.user.createdAt.toDate();
+        if (this.user.createdAt?.toDate) {
+          this.user.createdAt = this.user.createdAt.toDate();
+        }
 
-        const { posts, load } = await getThreadsByIds(this.user.threads);
+        const { posts, load } = await getThreadsByIds(this.user.threads || []);
         await load();
         this.threads = posts.value;
       } else {
@@ -88,20 +101,22 @@ export default {
 </script>
 
 <style scoped>
+.padding-container {
+  padding: 20px;
+}
+
 /* Profile Header Styles */
 .profile-header {
   background-color: #000000;
   padding: 20px;
   border-radius: 20px;
-  margin: 20px;
-
-
+  margin: 20px auto;
   text-align: center;
   color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .profile-header h1 {
-  color: #fff;
   margin-bottom: 10px;
 }
 
@@ -113,14 +128,9 @@ export default {
 /* Update Profile Section Styles */
 .update-profile {
   margin-top: 20px;
-  position: relative;
-  margin-left: 600px;
-}
-
-.update-title {
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
 }
 
 .update-button {
@@ -137,18 +147,18 @@ export default {
 .update-button:hover {
   background-color: rgb(245, 66, 101);
 }
+
 .update-form {
-  
-  top: 100%;
-  right: 500px;
   background-color: #fff;
   padding: 20px;
+  margin-top: 10px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-left: 400px;
-  width: 500px; /* Adjust the width as needed */
-  margin-top: 10px; /* Add some margin from the button */
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -173,10 +183,11 @@ export default {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
+  margin: 20px auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.threads-section h1 {
+.threads-section h2 {
   color: rgb(245, 66, 101);
   margin-bottom: 10px;
 }
