@@ -21,8 +21,8 @@ const routes = [{
         path: '/dashboard',
         name: 'Dashboard',
         component: DashboardView,
-        meta: { requiresAuth: true } 
-      },
+        meta: { requiresAuth: true }
+    },
     {
         path: '/home',
         name: 'homeUser',
@@ -39,14 +39,14 @@ const routes = [{
         name: 'Discussion',
         component: DiscussionView,
         meta: { requiresAuth: true } // Authentication required for discussions
-      },
-      
-      {
+    },
+
+    {
         path: '/create',
         name: 'CreateThread',
         component: CreateThread,
         meta: { requiresAuth: true } // Authentication required for creating threads
-      }
+    }
 ]
 
 const router = createRouter({

@@ -38,7 +38,7 @@ const getUserById = async(uid) => {
 };
 
 // ✅ Add this
-const updateUserProfile = async (userId, { displayName, email }) => {
+const updateUserProfile = async(userId, { displayName, email }) => {
     const currentUser = projectAuth.currentUser;
     if (!currentUser || currentUser.uid !== userId) {
         throw new Error("Unauthorized or invalid user.");
