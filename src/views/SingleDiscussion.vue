@@ -5,9 +5,10 @@
     <div v-if="replies.length > 0" class="replies">
       <h3>Replies</h3>
       <ThreadReply
-        v-for="reply in replies"
-        :key="reply.id"
+        v-for="(reply, index) in replies"
+        :key="index"
         :reply="reply"
+        :index="index"
         :currentUserId="currentUserId"
         @delete-reply="deleteReply"
       />
@@ -49,12 +50,15 @@ export default {
     };
   },
   async created() {
-    const { post, load } = getthread(this.$route.params.id);
-    await load();
-    this.mainThread = post.value;
-    this.replies = post.value.answers || [];
+    await this.loadThread();
   },
   methods: {
+    async loadThread() {
+      const { post, load } = getthread(this.$route.params.id);
+      await load();
+      this.mainThread = post.value;
+      this.replies = post.value.answers || [];
+    },
     async addReply() {
       const trimmed = this.newReplyContent.trim();
       const user = getUser();
@@ -66,20 +70,14 @@ export default {
         };
 
         await appendAnswerToThread(this.$route.params.id, reply.author, reply.content);
-
-        this.replies.push({
-          id: Date.now().toString(), // temp ID until reload
-          message: reply.content,
-          author: reply.author
-        });
-
+        await this.loadThread();
         this.newReplyContent = '';
       }
     },
-    async deleteReply(replyId) {
+    async deleteReply(index) {
       try {
-        await deleteResponse(this.$route.params.id, replyId);
-        this.replies = this.replies.filter(reply => reply.id !== replyId);
+        await deleteResponse(this.$route.params.id, index);
+        await this.loadThread();
       } catch (err) {
         alert('Failed to delete reply.');
       }
@@ -87,3 +85,56 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.discussion {
+  background-color: #fafafa;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.replies {
+  margin-top: 20px;
+}
+
+.replies h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #262626;
+}
+
+.reply-form {
+  margin-top: 20px;
+}
+
+.reply-form h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #262626;
+}
+
+.reply-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.reply-button {
+  background-color: rgb(245, 66, 101);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.reply-button:hover {
+  background-color: rgb(189, 28, 60);
+}
+</style>

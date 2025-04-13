@@ -1,20 +1,9 @@
 import { projectFirestore } from '@/Firebase/Config';
 
-// Delete a thread by ID
-const deleteThread = async (threadId) => {
+// Delete a response from a thread by its index
+const deleteResponse = async (threadId, index) => {
   try {
-    await projectFirestore.collection('discussions').doc(threadId).delete();
-    console.log('Thread deleted');
-  } catch (error) {
-    console.error('Error deleting thread:', error);
-    throw error;
-  }
-};
-
-// Delete a response from a thread
-const deleteResponse = async (threadId, responseId) => {
-  try {
-    const threadRef = projectFirestore.collection('discussions').doc(threadId);
+    const threadRef = projectFirestore.collection('threads').doc(threadId);
     const threadDoc = await threadRef.get();
 
     if (!threadDoc.exists) {
@@ -22,15 +11,13 @@ const deleteResponse = async (threadId, responseId) => {
     }
 
     const threadData = threadDoc.data();
-
-    // Ensure answers exist and are an array
     const answers = Array.isArray(threadData.answers) ? threadData.answers : [];
 
-    // Filter out the reply by ID
-    const updatedAnswers = answers.filter(reply => reply.id !== responseId);
+    // ✅ Remove the element at the specified index
+    answers.splice(index, 1);
 
-    // Update the thread with the filtered array
-    await threadRef.update({ answers: updatedAnswers });
+    // ✅ Update Firestore with the new array
+    await threadRef.update({ answers });
 
     console.log('Response deleted');
   } catch (error) {
@@ -39,4 +26,4 @@ const deleteResponse = async (threadId, responseId) => {
   }
 };
 
-export { deleteThread, deleteResponse };
+export { deleteResponse };
