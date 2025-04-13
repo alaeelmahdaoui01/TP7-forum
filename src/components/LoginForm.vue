@@ -42,54 +42,57 @@ export default {
 </script>
   
 <style scoped>
-
 .login {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  font-family: 'Segoe UI', sans-serif;
+  gap: 1.25rem;
 }
 
 .login input[type="email"],
 .login input[type="password"] {
-  padding: 0.75rem;
+  padding: 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
   font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .login input[type="email"]:focus,
 .login input[type="password"]:focus {
-  border-color: #5c9ded;
+  border-color: rgba(92, 157, 237, 0.5);
   outline: none;
+  box-shadow: 0 0 0 2px rgba(92, 157, 237, 0.2);
+}
+
+.login input[type="email"]::placeholder,
+.login input[type="password"]::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .login input[type="submit"] {
-  padding: 0.75rem;
-  font-size: 1rem;
-  background-color: #5c9ded;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #ff5e7d 0%, #ff2d5f 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .login input[type="submit"]:hover {
-  background-color: #407ec9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 45, 95, 0.3);
 }
 
 .error {
-  color: #d9534f;
+  color: #ff5e7d;
   font-size: 0.9rem;
   text-align: center;
+  margin-top: 0.5rem;
 }
 </style>
-
