@@ -36,8 +36,10 @@ export default {
     this.error = "";
 
     await dataBase.set({
+      createdAt: new Date(),
       displayName: this.displayName,
       email: this.email,
+      threads: []
     });
 
     this.$router.push("/home");

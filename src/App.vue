@@ -4,7 +4,8 @@
 </template>
 
 <script>
-import { isLogged, getUser, waitForAuthInit } from '@/Firebase/Authentification/getUser'; 
+import { getUser, isLogged, waitForAuthInit } from '@/Firebase/Authentification/getUser';
+//import { ref, onMounted } from 'vue';
 import NavBarUser from './components/NavBarUser.vue';
 
 export default {
@@ -16,14 +17,32 @@ export default {
       islogged: false,
     };
   },
-  mounted() {
-    waitForAuthInit().then(() => {
-      this.islogged = isLogged();
-      if (this.islogged) {
-        this.user = getUser();
-      }
-    });
+  async mounted() {
+    // Wait for auth to initialize
+    await waitForAuthInit();
+    
+    // Set initial state
+    this.updateAuthState();
+    
+    this.authWatcher = setInterval(() => {
+      this.updateAuthState();
+    }, 500);
   },
+  beforeUnmount() {
+    // Clean up the interval when component unmounts
+    if (this.authWatcher) {
+      clearInterval(this.authWatcher);
+    }
+  },
+  methods: {
+    updateAuthState() {
+      const currentUser = getUser();
+      if (currentUser !== this.user || !!currentUser !== this.islogged) {
+        this.user = currentUser;
+        this.islogged = isLogged();
+      }
+    }
+  }
 }
 </script>
 

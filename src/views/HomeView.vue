@@ -1,69 +1,129 @@
 <template>
-  <div class="home">
+  <div class="home-container">
     <NavBar />
-    <section class="welcome">
-      <h1>Welcome to Forum App</h1>
-      <p>Join the conversation. Share your thoughts. Learn something new.</p>
-      <button><router-link to="/login"> Start a Discussion </router-link></button>
-    </section>
+    <main class="content-wrapper">
+      <div class="welcome-message">
+        <h1>Welcome to Forum App</h1>
+        <p>Join the conversation. Share your thoughts. Learn something new.</p>
+        <router-link to="/login" class="cta-button">Start a Discussion</router-link>
+      </div>
+    </main>
+    <div class="blur-circle"></div>
   </div>
 </template>
+
+
 
 <script>
 import NavBar from "../components/NavBar.vue";
 
 export default {
-name: "HomeView",
-components: { NavBar },
+  name: "HomeView",
+  components: { NavBar },
 };
 </script>
 
 <style scoped>
-.home {
-padding: 2rem;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background-color: #f8fafc;
-min-height: 100vh;
+.home-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #1e1e2f;
+  color: white;
+  overflow: hidden;
 }
 
-.welcome {
-text-align: center;
-background-color: #e2e8f0;
-padding: 2rem;
-border-radius: 1rem;
-margin-bottom: 2rem;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 2rem 2rem; /* Matches navbar height + padding */
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.welcome h1 {
-font-size: 2.5rem;
-color: #1e293b;
-margin-bottom: 1rem;
+.welcome-message {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  z-index: 1;
+  position: relative;
 }
 
-.welcome p {
-font-size: 1.1rem;
-color: #475569;
-margin-bottom: 1.5rem;
+.welcome-message h1 {
+  font-size: 2.75rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #ffffff, #c9d6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-.welcome button {
-background-color: #3b82f6;
-color: white;
-padding: 0.75rem 1.5rem;
-font-size: 1rem;
-border: none;
-border-radius: 0.5rem;
-cursor: pointer;
-transition: background-color 0.3s ease;
+.welcome-message p {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
 }
 
-.welcome button:hover {
-background-color: #2563eb;
+.cta-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff5e7d 0%, #ff2d5f 100%);
+  color: white;
+  padding: 0.875rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(255, 45, 95, 0.3);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
-.welcome a{
-  text-decoration : none ; 
-  color : white 
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 45, 95, 0.4);
+}
+
+.blur-circle {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(100, 108, 255, 0.2), transparent 70%);
+  filter: blur(80px);
+  top: 20%;
+  left: 10%;
+  z-index: 0;
+  animation: float 15s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(50px, 50px);
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-message {
+    padding: 3rem 1.5rem;
+  }
+  
+  .welcome-message h1 {
+    font-size: 2.25rem;
+  }
+  
+  .welcome-message p {
+    font-size: 1.1rem;
+  }
+  
+  .blur-circle {
+    width: 300px;
+    height: 300px;
+    filter: blur(60px);
+  }
 }
 </style>
