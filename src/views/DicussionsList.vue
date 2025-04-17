@@ -4,7 +4,6 @@
       <h1>Welcome to the world of information</h1>
       <div class="search-bar">
         <input type="text" v-model="searchQuery" placeholder="Search discussions...">
-        <button @click="search">Search</button>
       </div>
     </div>
     <div class="threads-content">
@@ -51,12 +50,6 @@
             thread.tags.some(tag => tag.toLowerCase().includes(query))
           );
         }
-      }
-    },
-    methods: {
-      search() {
-        // This method is called when the search button is clicked
-        // The computed property `filteredThreads` automatically updates based on the `searchQuery`
       }
     }
   };

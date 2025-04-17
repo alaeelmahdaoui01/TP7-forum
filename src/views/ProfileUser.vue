@@ -32,6 +32,7 @@
         </div>
       </div>
     </div>
+    <div class="blur-circle"></div>
   </div>
 </template>
 
@@ -102,93 +103,179 @@ export default {
 
 <style scoped>
 .padding-container {
-  padding: 20px;
+  padding: 2rem;
+  position: relative;
+  min-height: 100vh;
+  background-color: #1e1e2f;
+  color: white;
+  overflow: hidden;
 }
 
-/* Profile Header Styles */
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
 .profile-header {
-  background-color: #000000;
-  padding: 20px;
-  border-radius: 20px;
-  margin: 20px auto;
-  text-align: center;
-  color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .profile-header h1 {
-  margin-bottom: 10px;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #ffffff, #c9d6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-align: center;
 }
 
 .profile-detail {
-  font-weight: bold;
-  color: #fff;
+  color: rgba(253, 114, 158, 0.8);
+  font-weight: 500;
 }
 
-/* Update Profile Section Styles */
+.profile-header p {
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.threads-section {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.threads-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  background: linear-gradient(to right, rgba(253, 114, 158, 0.8), rgba(253, 114, 158, 0.5));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .update-profile {
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  width: fit-content;
+  margin-top: 2rem;
+  text-align: center;
 }
 
 .update-button {
-  background-color: rgb(245, 66, 101);
-  color: #fff;
+  background: linear-gradient(135deg, rgba(253, 114, 158, 0.8), rgba(189, 28, 60, 0.8));
+  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(253, 114, 158, 0.3);
 }
 
 .update-button:hover {
-  background-color: rgb(245, 66, 101);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(253, 114, 158, 0.4);
+  background: linear-gradient(135deg, rgba(253, 114, 158, 0.9), rgba(189, 28, 60, 0.9));
 }
 
 .update-form {
-  background-color: #fff;
-  padding: 20px;
-  margin-top: 10px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  margin-top: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .form-label {
-  font-size: 18px;
-  color: #333;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 
 .form-input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
-/* Threads Section Styles */
-.threads-section {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  margin: 20px auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.form-input:focus {
+  border-color: rgba(253, 114, 158, 0.6);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(253, 114, 158, 0.2);
 }
 
-.threads-section h2 {
-  color: rgb(245, 66, 101);
-  margin-bottom: 10px;
+.blur-circle {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(253, 114, 158, 0.2), transparent 70%);
+  filter: blur(100px);
+  bottom: -100px;
+  right: -100px;
+  z-index: 0;
+  animation: float 15s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, 30px);
+  }
+}
+
+@media (max-width: 768px) {
+  .padding-container {
+    padding: 1.5rem;
+  }
+  
+  .profile-header h1 {
+    font-size: 2rem;
+  }
+  
+  .profile-header,
+  .threads-section,
+  .update-form {
+    padding: 1.5rem;
+  }
+  
+  .blur-circle {
+    width: 300px;
+    height: 300px;
+    filter: blur(60px);
+  }
 }
 </style>

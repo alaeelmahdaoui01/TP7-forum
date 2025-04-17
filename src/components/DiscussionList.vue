@@ -42,14 +42,26 @@ export default {
     },
     
     async getThreadsWithUsernames(threads) {
-      const threadsWithUsernames = await Promise.all(
-        threads.map(async (thread) => {
+  try {
+    return await Promise.all(
+      threads.map(async (thread) => {
+        try {
           const authorName = await this.getuser(thread.author);
-          return { ...thread, authorName };
-        })
-      );
-      return threadsWithUsernames;
-    }
+          return { 
+            ...thread, 
+            authorName: authorName || 'Unknown' 
+          };
+        } catch (error) {
+          console.error('Error getting user:', error);
+          return { ...thread, authorName: 'Unknown' };
+        }
+      })
+    );
+  } catch (error) {
+    console.error('Error processing threads:', error);
+    return threads.map(t => ({ ...t, authorName: 'Unknown' }));
+  }
+}
   }
 }
 </script>
@@ -169,7 +181,7 @@ export default {
 }
 
 .view-button {
-  background: linear-gradient(135deg, #580415 0%, #6d0921 100%);
+  background: linear-gradient(135deg, #22192b 0%, #2c121a 100%);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -181,7 +193,7 @@ export default {
 }
 
 .view-button:hover {
-  background: linear-gradient(135deg, #75293b 0%, #6d2436 100%);
+  background: linear-gradient(135deg, #2c121a 0%, #6d2436 100%);
   box-shadow: 0 4px 15px rgba(255, 45, 95, 0.3);
 }
 
