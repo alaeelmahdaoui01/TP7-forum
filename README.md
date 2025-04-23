@@ -1,5 +1,10 @@
 # tp7-forum
 
+Ce projet a été effectué par : 
+- El Mahdaoui Alae
+- Lekbiri Khadija
+- El Iamani Nour El Houda 
+
 ## Project setup
 ```
 npm install
